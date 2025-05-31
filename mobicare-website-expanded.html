@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobicare. - Electronics Repair Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.1);
+            --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --gradient-secondary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--light);
+            background: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: var(--gradient-main);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.02)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            animation: grain 20s linear infinite;
+        }
+
+        @keyframes grain {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-5px, -5px); }
+            50% { transform: translate(-10px, 5px); }
+            75% { transform: translate(5px, -10px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Modern glass header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: var(--shadow);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo::before {
+            content: '⚡';
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+        }
+
+        .nav-links a:hover {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-secondary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+
+        /* Hero section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .hero-content {
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 50%, #64748b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: rgba(248, 250, 252, 0.8);
+            margin-bottom: 3rem;
+            line-height: 1.7;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--gradient-secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(79, 172, 254, 0.4);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Floating elements */
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+            border-radius: 50%;
+        }
+
+        .shape:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+            transform: rotate(45deg);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        /* Services section */
+        .services-section {
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: rgba(248, 250, 252, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            group: hover;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient-secondary);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--light);
+        }
+
+        .service-card p {
+            color: rgba(248, 250, 252, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-features {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .service-features li {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Contact section */
+        .contact-section {
+            padding: 8rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .contact-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            animation: rotate 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-card:hover::before {
+            opacity: 1;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-card h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-card p {
+            color: rgba(248, 250, 252, 0.7);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(248, 250, 252, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--light);
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .mobile-menu:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(15, 23, 42, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 2rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hero {
+                padding: 8rem 0 4rem;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Scroll animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    
+.pricing {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    display: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #d1d5db;
+    transition: all 0.3s ease;
+}
+.service-card.active .pricing {
+    display: block;
+}
+
+</style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    
+    <header id="header">
+        <nav class="container">
+            <a href="#" class="logo" style="font-family: 'League Spartan', sans-serif;">Mobicare.</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <button class="mobile-menu" onclick="toggleMenu()">☰</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="floating-shapes">
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Next-Gen Electronics Repair</h1>
+                    <p>Transform your broken devices back to perfect condition with our cutting-edge repair technology and expert craftsmanship. Fast, reliable, and backed by our satisfaction guarantee.</p>
+                    <div class="cta-group">
+                        <a href="#contact" class="cta-button">
+                            <span>Get Free Quote</span>
+                            <span>→</span>
+                        </a>
+                        <a href="#services" class="cta-button cta-secondary">
+                            <span>View Services</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="services-section">
+            <div class="container">
+                <div class="section-header scroll-animate">
+                    <h2>Premium Repair Services</h2>
+                    <p>Professional solutions for all your electronic devices with advanced diagnostic tools and genuine parts</p>
+                </div>
+                
+                <div class="services-grid">
+                    <div class="service-card scroll-animate">
+                        <span class="service-icon">📱</span>
+                        <h3>Smartphone Repair</h3>
+                        <p>Complete mobile device restoration including screen replacement, battery optimization, and water damage recovery.</p>
+                        <ul class="service-features">
+                            <li>Screen Repair</li>
+                            <li>Battery Replace</li>
+                            <li>Water Damage</li>
+                            <li>Camera Fix</li>
+                        </ul>
+<div class="pricing">
+    <strong>Pricing:</strong><br>
+    Screen Repair: $89<br>
+    Battery Replacement: $59<br>
+    Water Damage Recovery: $99+<br>
+    Charging Port Repair: $69<br>
+    Software Troubleshooting: $49
+</div>
+
+                    </div>
+                    
+                    <div class="service-card scroll-animate">
+                        <span class="service-icon">💻</span>
+                        <h3>Laptop & Desktop</h3>
+                        <p>Complete computer repair services from hardware upgrades to performance optimization and virus removal.</p>
+                        <ul class="service-features">
+                            <li>Hardware Upgrade</li>
+                            <li>OS Installation</li>
+                            <li>Virus Removal</li>
+                            <li>Performance Boost</li>
+                        </ul>
+<div class="pricing">
+    <strong>Pricing:</strong><br>
+    Hardware Upgrade: $49+<br>
+    OS Installation: $79<br>
+    Virus Removal: $69<br>
+    Fan Replacement: $59<br>
+    Data Backup & Restore: $89
+</div>
+
+                    </div>
+                    
+                    <div class="service-card scroll-animate">
+                        <span class="service-icon">🎮</span>
+                        <h3>Gaming Consoles</h3>
+                        <p>Specialized gaming console repair including overheating fixes, controller repair, and software troubleshooting.</p>
+                        <ul class="service-features">
+                            <li>Overheating Fix</li>
+                            <li>Controller Repair</li>
+                            <li>Software Issues</li>
+                            <li>HDMI Problems</li>
+                        </ul>
+<div class="pricing">
+    <strong>Pricing:</strong><br>
+    Overheating Fix: $99<br>
+    Controller Repair: $39<br>
+    HDMI Issues: $59<br>
+    Disk Drive Repair: $79<br>
+    Firmware Update: $49
+</div>
+
+                    </div>
+                    
+                    <div class="service-card scroll-animate">
+                        <span class="service-icon">⚡</span>
+                        <h3>Component Repair</h3>
+                        <p>Advanced micro-soldering and component-level repairs for complex electronic issues and motherboard problems.</p>
+                        <ul class="service-features">
+                            <li>Micro-soldering</li>
+                            <li>Board Repair</li>
+                            <li>Chip Replacement</li>
+                            <li>Circuit Analysis</li>
+                        </ul>
+<div class="pricing">
+    <strong>Pricing:</strong><br>
+    Micro-soldering: $119+<br>
+    Chip Replacement: $89+<br>
+    Board Repair: $129+<br>
+    Trace Damage Repair: $99<br>
+    Power Supply Fix: $109
+</div>
+
+                    </div>
+                    
+                    <div class="service-card scroll-animate">
+                        <span class="service-icon">💾</span>
+                        <h3>Data Recovery</h3>
+                        <p>Professional data recovery from damaged storage devices with clean room facilities and advanced recovery tools.</p>
+                        <ul class="service-features">
+                            <li>HDD Recovery</li>
+                            <li>SSD Repair</li>
+                            <li>File Restoration</li>
+                            <li>Clean Room</li>
+                        </ul>
+<div class="pricing">
+    <strong>Pricing:</strong><br>
+    HDD Recovery: $149+<br>
+    SSD Repair: $129+<br>
+    File Restoration: $99+<br>
+    Deleted File Recovery: $89<br>
+    External Drive Repair: $109
+</div>
+
+                    </div>
+                    
+                    <div class="service-card scroll-animate">
+                        <span class="service-icon">🚀</span>
+                        <h3>Express Service</h3>
+                        <p>Same-day and emergency repair services for critical business needs with priority handling and fast turnaround.</p>
+                        <ul class="service-features">
+                            <li>Same-Day</li>
+                            <li>Emergency</li>
+                            <li>Priority Queue</li>
+                            <li>Business Focus</li>
+                        </ul>
+<div class="pricing">
+    <strong>Pricing:</strong><br>
+    Same-Day: +$50 Rush Fee<br>
+    Emergency Services: $199+<br>
+    Priority Queue: $149<br>
+    On-Site Services: $249+<br>
+    After-Hours Support: $99/hr
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <div class="section-header scroll-animate">
+                    <h2>Get Your Device Fixed Today</h2>
+                    <p>Ready to restore your electronics? Contact us for a free diagnostic and competitive quote.</p>
+                </div>
+                
+                <div class="contact-grid">
+                    <div class="contact-card scroll-animate">
+                        <span class="contact-icon">📞</span>
+                        <h4>Call Us</h4>
+                        <p>(555) 123-TECH<br>Available 24/7</p>
+                    </div>
+                    
+                    <div class="contact-card scroll-animate">
+                        <span class="contact-icon">💬</span>
+                        <h4>Text/WhatsApp</h4>
+                        <p>(555) 123-8324<br>Quick responses</p>
+                    </div>
+                    
+                    <div class="contact-card scroll-animate">
+                        <span class="contact-icon">📧</span>
+                        <h4>Email</h4>
+                        <p>info@techfixpro.com<br>24hr response time</p>
+                    </div>
+                    
+                    <div class="contact-card scroll-animate">
+                        <span class="contact-icon">📍</span>
+                        <h4>Visit Us</h4>
+                        <p>123 Tech Street<br>Repair City, RC 12345</p>
+                    </div>
+                    
+                    <div class="contact-card scroll-animate">
+                        <span class="contact-icon">⏰</span>
+                        <h4>Hours</h4>
+                        <p>Mon-Fri: 8AM-8PM<br>Sat-Sun: 10AM-6PM</p>
+                    </div>
+                    
+                    <div class="contact-card scroll-animate">
+                        <span class="contact-icon">🛡️</span>
+                        <h4>Warranty</h4>
+                        <p>90-Day Guarantee<br>Licensed & Insured</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Mobicare. All rights reserved.</p>
+                <ul class="footer-links">
+                    <li><a href="#privacy">Privacy</a></li>
+                    <li><a href="#terms">Terms</a></li>
+                    <li><a href="#warranty">Warranty</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                // Close mobile menu if open
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all scroll-animate elements
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax effect for floating shapes
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const shapes = document.querySelectorAll('.shape');
+            
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                shape.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
+    
+// Toggle pricing visibility
+document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('click', () => {
+        card.classList.toggle('active');
+    });
+});
+
+</script>
+</body>
+</html>
